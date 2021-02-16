@@ -16,41 +16,46 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.money.api.model.Category;
-import com.money.api.repository.CategoryRepository;
+import com.money.api.model.Person;
+import com.money.api.repository.PersonRepository;
 
 @RestController
-@RequestMapping("/categories")
-public class CategoryResource {
+@RequestMapping("/person")
+public class PersonResource {
 	
 	@Autowired
-	private CategoryRepository categoryRepository;
+	private PersonRepository personRepository;
 	
 	@GetMapping
-	public List<Category> list() {
-		return categoryRepository.findAll();
+	private List<Person> list() {
+		
+		return personRepository.findAll();
+	}
+	
+	@GetMapping("/{codigo}")
+	private ResponseEntity<?> findById(@PathVariable Long codigo) {
+		
+		Person person = personRepository.findOne(codigo);		
+		if (person != null) 
+			return ResponseEntity.ok().body(person);
+				
+		return ResponseEntity.noContent().build();
+		
 	}
 	
 	@PostMapping
-	public ResponseEntity<Category> create(@Valid @RequestBody Category category, HttpServletResponse response) {
-		Category savedCategory = categoryRepository.save(category);
+	private ResponseEntity<Person> create(@Valid @RequestBody Person person, HttpServletResponse response) {
+		
+		Person savedPerson = personRepository.save(person);
 		
 		URI uri = ServletUriComponentsBuilder
 			.fromCurrentRequestUri()
 			.path("/{codigo}")
-			.buildAndExpand(savedCategory.getCodigo())
+			.buildAndExpand(savedPerson.getCodigo())
 			.toUri();
+		
 		response.setHeader("Location", uri.toASCIIString());
 		
-		return ResponseEntity.created(uri).body(savedCategory);
-	}
-	
-	@GetMapping("/{codigo}")
-	public ResponseEntity<Category> findById(@PathVariable Long codigo) {
-		Category category = categoryRepository.findOne(codigo);
-		if (category != null)
-			return ResponseEntity.ok().body(category);
-		
-		return ResponseEntity.noContent().build();
+		return ResponseEntity.created(uri).body(savedPerson);		
 	}
 }
