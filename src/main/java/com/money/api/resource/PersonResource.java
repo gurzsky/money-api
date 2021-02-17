@@ -75,4 +75,10 @@ public class PersonResource {
 		Person savedPerson = personService.update(codigo, person);		
 		return ResponseEntity.ok(savedPerson);
 	}
+	
+	@PutMapping("/{codigo}/ativo")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updateActive(@PathVariable Long codigo, @RequestBody Boolean ativo) {
+		personService.updateActive(codigo, ativo);
+	}
 }
