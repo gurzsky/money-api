@@ -1,6 +1,6 @@
 package com.money.api.model;
 
-public enum TipoLancamento {
+public enum ReleaseType {
 	
 	RECEITA,
 	DESPESA

@@ -13,29 +13,36 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "lancamento")
-public class Release {
-	
-	@Id
+public class Release { 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long codigo;
 	
+	@NotNull
+	@Size(min=1, max=50)
 	private String descricao;
 	
+	@NotNull
 	@Column(name = "data_vencimento")
 	private LocalDate dataVencimento;
 	
 	@Column(name = "data_pagamento")
 	private LocalDate dataPagamento;
 	
+	@NotNull
 	private BigDecimal valor;
 	
+	@Size(min=1, max=100)
 	private String observacao;
 	
+	@NotNull
+	@Size(min=1, max=20)
 	@Enumerated(EnumType.STRING)
-	private TipoLancamento tipo;
+	private ReleaseType tipo;
 	
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
@@ -93,11 +100,11 @@ public class Release {
 		this.observacao = observacao;
 	}
 
-	public TipoLancamento getTipo() {
+	public ReleaseType getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(TipoLancamento tipo) {
+	public void setTipo(ReleaseType tipo) {
 		this.tipo = tipo;
 	}
 
