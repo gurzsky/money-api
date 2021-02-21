@@ -43,10 +43,12 @@ public class Release { 	@Id
 	@Enumerated(EnumType.STRING)
 	private ReleaseType tipo;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_categoria")
 	private Category categoria;
 	
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "codigo_pessoa")
 	private Person pessoa;
