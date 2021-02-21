@@ -39,8 +39,7 @@ public class Release { 	@Id
 	@Size(min=1, max=100)
 	private String observacao;
 	
-	@NotNull
-	@Size(min=1, max=20)
+	@NotNull	
 	@Enumerated(EnumType.STRING)
 	private ReleaseType tipo;
 	
