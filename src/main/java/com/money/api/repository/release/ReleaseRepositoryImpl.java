@@ -12,6 +12,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import com.money.api.model.Release;
 import com.money.api.model.Release_;
@@ -23,7 +26,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 	private EntityManager manager;
 
 	@Override
-	public List<Release> filter(ReleaseFilter releaseFilter) {
+	public Page<Release> filter(ReleaseFilter releaseFilter, Pageable pageable) {
 
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
 		CriteriaQuery<Release> criteria = builder.createQuery(Release.class);
@@ -34,10 +37,13 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		Predicate[] predicates = createRestrictions(releaseFilter, builder, root);
 		criteria.where(predicates);
 		
-		TypedQuery<Release> query = manager.createQuery(criteria);		
-		return query.getResultList();
+		TypedQuery<Release> query = manager.createQuery(criteria);
+		
+		addRestrictionsPage(query, pageable);
+		
+		return new PageImpl<>(query.getResultList(), pageable, total(releaseFilter));
 	}
-
+	
 	private Predicate[] createRestrictions(ReleaseFilter releaseFilter, CriteriaBuilder builder, Root<Release> root) {
 		
 		List<Predicate> predicates = new ArrayList<Predicate>();
@@ -67,5 +73,27 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		}
 		
 		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+	
+	private void addRestrictionsPage(TypedQuery<Release> query, Pageable pageable) {
+		int actualPage = pageable.getPageNumber();
+		int totalRecordsPerPage = pageable.getPageSize();
+		int firstRecordPerPage = actualPage * totalRecordsPerPage;
+		
+		query.setFirstResult(firstRecordPerPage);
+		query.setMaxResults(totalRecordsPerPage);
+	}
+	
+	private Long total(ReleaseFilter releaseFilter) {
+		
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
+		Root<Release> root = criteria.from(Release.class);
+		
+		Predicate[] predicates = createRestrictions(releaseFilter, builder, root);
+		criteria.where(predicates);
+		criteria.select(builder.count(root));
+		
+		return manager.createQuery(criteria).getSingleResult();
 	}
 }
