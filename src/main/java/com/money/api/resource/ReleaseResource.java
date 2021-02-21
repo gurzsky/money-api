@@ -24,6 +24,7 @@ import com.money.api.event.ResourceCreatedEvent;
 import com.money.api.exceptionHandler.MoneyExceptionHandler.Error;
 import com.money.api.model.Release;
 import com.money.api.repository.ReleaseRepository;
+import com.money.api.repository.filter.ReleaseFilter;
 import com.money.api.service.ReleaseService;
 import com.money.api.service.exception.InactiveOrNonexistentPersonException;
 
@@ -44,8 +45,8 @@ public class ReleaseResource {
 	private MessageSource messageSource;
 	
 	@GetMapping
-	public List<Release> find() {
-		return releaseRepository.findAll();
+	public List<Release> search(ReleaseFilter releaseFilter) {
+		return releaseRepository.filter(releaseFilter);
 	}
 	
 	@GetMapping("/{codigo}")
