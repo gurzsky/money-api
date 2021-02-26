@@ -30,6 +30,7 @@ import com.money.api.exceptionHandler.MoneyExceptionHandler.Error;
 import com.money.api.model.Release;
 import com.money.api.repository.ReleaseRepository;
 import com.money.api.repository.filter.ReleaseFilter;
+import com.money.api.repository.projection.ReleaseResume;
 import com.money.api.service.ReleaseService;
 import com.money.api.service.exception.InactiveOrNonexistentPersonException;
 
@@ -53,6 +54,12 @@ public class ReleaseResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")	
 	public Page<Release> search(ReleaseFilter releaseFilter, Pageable pageable) {
 		return releaseRepository.filter(releaseFilter, pageable);
+	}
+	
+	@GetMapping(params = "resume")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")	
+	public Page<ReleaseResume> resume(ReleaseFilter releaseFilter, Pageable pageable) {
+		return releaseRepository.resume(releaseFilter, pageable);
 	}
 	
 	@GetMapping("/{codigo}")

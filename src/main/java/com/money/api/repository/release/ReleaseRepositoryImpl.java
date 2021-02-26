@@ -1,5 +1,7 @@
 package com.money.api.repository.release;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +18,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import com.money.api.model.Category_;
+import com.money.api.model.Person_;
 import com.money.api.model.Release;
+import com.money.api.model.ReleaseType;
 import com.money.api.model.Release_;
 import com.money.api.repository.filter.ReleaseFilter;
+import com.money.api.repository.projection.ReleaseResume;
 
 public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 	
@@ -75,7 +81,7 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 	
-	private void addRestrictionsPage(TypedQuery<Release> query, Pageable pageable) {
+	private void addRestrictionsPage(TypedQuery<?> query, Pageable pageable) {
 		int actualPage = pageable.getPageNumber();
 		int totalRecordsPerPage = pageable.getPageSize();
 		int firstRecordPerPage = actualPage * totalRecordsPerPage;
@@ -95,5 +101,32 @@ public class ReleaseRepositoryImpl implements ReleaseRepositoryQuery {
 		criteria.select(builder.count(root));
 		
 		return manager.createQuery(criteria).getSingleResult();
+	}
+
+	@Override
+	public Page<ReleaseResume> resume(ReleaseFilter releaseFilter, Pageable pageable) {
+		CriteriaBuilder builder = manager.getCriteriaBuilder();
+		CriteriaQuery<ReleaseResume> criteria = builder.createQuery(ReleaseResume.class);
+		Root<Release> root = criteria.from(Release.class);
+		
+		criteria.select(builder.construct(ReleaseResume.class
+				, root.get(Release_.codigo)
+				, root.get(Release_.descricao)
+				, root.get(Release_.dataVencimento)
+				, root.get(Release_.dataPagamento)
+				, root.get(Release_.valor)
+				, root.get(Release_.tipo)
+				, root.get(Release_.categoria).get(Category_.nome)
+				, root.get(Release_.pessoa).get(Person_.nome)));
+				
+		// criar as restrições
+		Predicate[] predicates = createRestrictions(releaseFilter, builder, root);
+		criteria.where(predicates);
+				
+		TypedQuery<ReleaseResume> query = manager.createQuery(criteria);
+				
+		addRestrictionsPage(query, pageable);
+				
+		return new PageImpl<>(query.getResultList(), pageable, total(releaseFilter));
 	}
 }
