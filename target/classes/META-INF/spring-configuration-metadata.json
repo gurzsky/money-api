@@ -1,0 +1,43 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty",
+      "name": "money",
+      "type": "com.money.api.config.property.MoneyApiProperty"
+    },
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty",
+      "name": "money.security",
+      "sourceMethod": "public com.money.api.config.property.MoneyApiProperty.Security getSecurity() ",
+      "type": "com.money.api.config.property.MoneyApiProperty$Security"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty$Security",
+      "name": "money.security.enable-https",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty$Security",
+      "name": "money.security.enable-https",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty$Security",
+      "name": "money.security.enable-https",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty$Security",
+      "name": "money.security.enable-https",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.money.api.config.property.MoneyApiProperty$Security",
+      "name": "money.security.enable-https",
+      "type": "java.lang.Boolean"
+    }
+  ]
+}
