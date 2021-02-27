@@ -1,4 +1,7 @@
 ### Java ###
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
 # Compiled class file
 *.class
 
@@ -19,3 +22,17 @@
 *.zip
 *.tar.gz
 *.rar
+
+# STS
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+# Intellij IDEA
+.idea
+*.iws
+*.iml
+*.ipr
