@@ -1,7 +1,5 @@
 package com.money.api.repository.release;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import com.money.api.model.Category_;
 import com.money.api.model.Person_;
 import com.money.api.model.Release;
-import com.money.api.model.ReleaseType;
 import com.money.api.model.Release_;
 import com.money.api.repository.filter.ReleaseFilter;
 import com.money.api.repository.projection.ReleaseResume;
