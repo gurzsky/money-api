@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -66,13 +67,10 @@ public class ReleaseResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public ResponseEntity<?> findById(@PathVariable Long codigo) {
 		
-		Release release = releaseRepository.findOne(codigo);
-		
+		Release release = releaseRepository.findOne(codigo);		
 		if (release != null)
-				return ResponseEntity.ok().body(release);
-		
-		return ResponseEntity.noContent().build();
-		
+				return ResponseEntity.ok().body(release);		
+		return ResponseEntity.noContent().build();	
 	}
 	
 	@PostMapping
@@ -90,8 +88,7 @@ public class ReleaseResource {
 		String userMessage = messageSource.getMessage("inactive-or-noneexistent.person", null, LocaleContextHolder.getLocale());
 		String developerMessage = ex.toString();
 		
-		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
-		
+		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));		
 		return ResponseEntity.badRequest().body(errors);
 		
 	}
@@ -104,4 +101,14 @@ public class ReleaseResource {
 		releaseRepository.delete(codigo);
 	}
 	
+	@PutMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
+	public ResponseEntity<Release> update(@Valid @RequestBody Release release, @PathVariable Long codigo) {
+		try {
+			Release savedRelease = releaseService.update(codigo, release);
+			return ResponseEntity.ok(savedRelease);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.notFound().build();
+		}		
+	}	
 }
